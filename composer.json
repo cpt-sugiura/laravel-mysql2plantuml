@@ -1,0 +1,32 @@
+{
+    "name": "molay76/laravel-mysql2plantuml",
+    "license": "MIT",
+    "description": "convert mysql schema to plantuml",
+    "authors": [
+        {
+            "name": "cpt-sugiura",
+            "email": "sugiura@cpoint-lab.co.jp"
+        }
+    ],
+    "keywords": [
+        "laravel",
+        "PlantUML",
+        "MySQL"
+    ],
+    "require": {
+        "php": ">=7.3.8",
+        "laravel/framework": "^6.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Mysql2PlantUml\\": "./src"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Mysql2PlantUml\\Mysql2PlantUmlServiceProvider"
+            ]
+        }
+    }
+}
