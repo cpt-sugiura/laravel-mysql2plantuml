@@ -70,7 +70,7 @@ class MySQL2PlantUML extends Command
             ->get()
             ->mapToGroups(
                 static function (InformationSchemaTable $table) use ($packageDefines) {
-                    if ($packageDefines === null) {
+                    if ($packageDefines === null || $packageDefines === []) {
                         return [$table->TABLE_SCHEMA => $table];
                     }
                     $packageName = collect($packageDefines)

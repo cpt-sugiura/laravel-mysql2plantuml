@@ -26,29 +26,26 @@ return [
     ],
     'target_database' => env('DB_DATABASE'),
     'relations' => [
-        [
-            'from' => 'hoge',
-            'to' => 'fuga',
-            'relation' => Relation::MANY_MANDATORY_TO_ONE_MANDATORY,
-            'direction' => Relation::DIRECTION_LEFT,
-            'arrowLength' => 4,
-        ],
-        [
-            'from' => 'foo',
-            'to' => 'bar',
-            'relation' => Relation::ONE_MANDATORY_TO_ONE_MANDATORY,
-            'direction' => Relation::DIRECTION_UP,
-            'arrowLength' => 4,
-        ],
+//        [
+//            'from' => 'hoge',
+//            'to' => 'fuga',
+//        ],
+//        [
+//            'from' => 'foo',
+//            'to' => 'bar',
+//            'relation' => Relation::ONE_MANDATORY_TO_ONE_MANDATORY,
+//            'direction' => Relation::DIRECTION_UP,
+//            'arrowLength' => 4,
+//        ],
     ],
     'packages' => [
-        'hogefuga' => [
-            'foo',
-            'bar'
-        ],
-        'foobar' => [
-            'hoge',
-            'fuga'
-        ]
+//        'hogefuga' => [
+//            'foo',
+//            'bar'
+//        ],
+//        'foobar' => [
+//            'hoge',
+//            'fuga'
+//        ]
     ]
 ];
