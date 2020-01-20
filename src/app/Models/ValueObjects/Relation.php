@@ -276,6 +276,6 @@ class Relation
         return $this->fromTable.' '
             .'-'.$this->diagramDirection.str_repeat('-', $this->diagramArrowLength - 1)
             .' '.$this->toTable
-            .':'.$leftRange.' : '.$rightRange;
+            .':'.$this->fromTable .' : '.$this->toTable.'\n = '.$leftRange.' : '.$rightRange;
     }
 }
