@@ -16,7 +16,7 @@ class MySQL2PlantUML extends Command
      *
      * @var string
      */
-    protected $signature = 'mysql2puml:generate';
+    protected $signature = 'dump:mysql2puml';
 
     /**
      * The console command description.

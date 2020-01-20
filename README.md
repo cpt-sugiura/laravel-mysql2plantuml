@@ -1,7 +1,7 @@
 # 既存のMySQL製データベースを元にPlantUML製ER図を出力
 ## TL;DR
 ```
-php artisan mysql2puml:generate
+php artisan dump:mysql2puml
 ```
 /storage/ER以下にPlantUML製ER図が出力されます。
 
