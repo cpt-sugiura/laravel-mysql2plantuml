@@ -4,7 +4,7 @@ use Mysql2PlantUml\app\Models\ValueObjects\Relation;
 
 return [
     'connection' => [
-        'driver' => 'mysql',
+        'driver' => env('DB_CONNECTION'),
         'url' => env('DATABASE_URL'),
         'host' => env('DB_HOST', '127.0.0.1'),
         'port' => env('DB_PORT', '3306'),
