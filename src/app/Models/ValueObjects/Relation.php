@@ -7,6 +7,13 @@ use Mysql2PlantUml\app\Exceptions\InvalidArgsException;
 
 class Relation
 {
+    public const FORMAT_CROW = 0x0;
+    public const FORMAT_NUM = 0x1;
+    public const FORMAT_TYPES = [
+        self::FORMAT_CROW,
+        self::FORMAT_NUM,
+    ];
+
     public const MANY_FOO_TO_BAR_BAZ = 0x1000;
     public const FOO_OPTIONAL_TO_BAR_BAZ = 0x0100;
     public const FOO_BAR_TO_MANY_BAZ = 0x0010;
@@ -64,19 +71,27 @@ class Relation
     public const DEFAULT_DIRECTION = self::DIRECTION_AUTO;
     public const DEFAULT_RELATION_TYPE = self::MANY_OPTIONAL_TO_ONE_MANDATORY;
 
+    /** @var string $fromTable */
     public $fromTable;
+    /** @var string $toTable */
     public $toTable;
     public $relationType;
     public $diagramDirection;
     public $diagramArrowLength;
+    /**      @var string $fromColumn */
+    private $fromColumn;
+    /** @var string $toColumn */
+    private $toColumn;
 
     /**
      * Relation constructor.
-     * @param $fromTable
-     * @param $toTable
+     * @param  string  $fromTable
+     * @param  string  $toTable
      * @param $relationType
      * @param $diagramDirection
      * @param $diagramArrowLength
+     * @param  string  $fromColumn
+     * @param  string  $toColumn
      * @throws InvalidArgsException
      */
     public function __construct(
@@ -84,10 +99,14 @@ class Relation
         string $toTable,
         $relationType = null,
         $diagramDirection = null,
-        $diagramArrowLength = null
+        $diagramArrowLength = null,
+        string $fromColumn = '',
+        string $toColumn = ''
     ) {
         $this->setFromTable($fromTable);
         $this->setToTable($toTable);
+        $this->fromColumn = ($fromColumn);
+        $this->toColumn = ($toColumn);
         $this->setRelationType($relationType ?? self::DEFAULT_RELATION_TYPE);
         $this->setDiagramDirection($diagramDirection ?? self::DEFAULT_DIRECTION);
         $this->setDiagramArrowLength($diagramArrowLength ?? self::DEFAULT_ARROW_LENGTH);
@@ -122,21 +141,13 @@ class Relation
 
     public function getRelationArrowStr(): string
     {
-        $arrowStr = $this->fromTable.' ';
-        if (($this->relationType & self::MANY_FOO_TO_BAR_BAZ) === self::MANY_FOO_TO_BAR_BAZ) {
-            $arrowStr .= '}';
+        switch (config('mysql2plantuml.relation_type')) {
+            case self::FORMAT_CROW:
+                return $this->getRelationArrowCrowFormatStr();
+            case self::FORMAT_NUM:
+            default:
+                return $this->getRelationArrowNumFormatStr();
         }
-        if (($this->relationType & self::FOO_OPTIONAL_TO_BAR_BAZ) === self::FOO_OPTIONAL_TO_BAR_BAZ) {
-            $arrowStr .= 'o';
-        }
-        $arrowStr .= '-'.$this->diagramDirection.str_repeat('-', $this->diagramArrowLength - 1);
-        if (($this->relationType & self::FOO_BAR_TO_BAZ_OPTIONAL) === self::FOO_BAR_TO_BAZ_OPTIONAL) {
-            $arrowStr .= 'o';
-        }
-        if (($this->relationType & self::FOO_BAR_TO_MANY_BAZ) === self::FOO_BAR_TO_MANY_BAZ) {
-            $arrowStr .= '{';
-        }
-        return $arrowStr.' '.$this->toTable;
     }
 
     /**
@@ -207,5 +218,64 @@ class Relation
             );
         }
         $this->diagramArrowLength = $diagramArrowLength;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getRelationArrowCrowFormatStr(): string
+    {
+        $arrowStr = $this->fromTable.' ';
+        if (($this->relationType & self::MANY_FOO_TO_BAR_BAZ) === self::MANY_FOO_TO_BAR_BAZ) {
+            $arrowStr .= '}';
+        }
+        if (($this->relationType & self::FOO_OPTIONAL_TO_BAR_BAZ) === self::FOO_OPTIONAL_TO_BAR_BAZ) {
+            $arrowStr .= 'o';
+        }
+        $arrowStr .= '-'.$this->diagramDirection.str_repeat('-', $this->diagramArrowLength - 1);
+        if (($this->relationType & self::FOO_BAR_TO_BAZ_OPTIONAL) === self::FOO_BAR_TO_BAZ_OPTIONAL) {
+            $arrowStr .= 'o';
+        }
+        if (($this->relationType & self::FOO_BAR_TO_MANY_BAZ) === self::FOO_BAR_TO_MANY_BAZ) {
+            $arrowStr .= '{';
+        }
+        return $arrowStr.' '.$this->toTable;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getRelationArrowNumFormatStr(): string
+    {
+        $leftRange = '';
+        if (($this->relationType & self::FOO_OPTIONAL_TO_BAR_BAZ) === self::FOO_OPTIONAL_TO_BAR_BAZ) {
+            $leftRange .= '0..';
+        } else {
+            $leftRange .= '1..';
+        }
+        if (($this->relationType & self::MANY_FOO_TO_BAR_BAZ) === self::MANY_FOO_TO_BAR_BAZ) {
+            $leftRange .= 'n';
+        } else {
+            $leftRange .= '1';
+        }
+        $leftRange = str_replace('1..1', '1', $leftRange);
+
+        $rightRange = '';
+        if (($this->relationType & self::FOO_BAR_TO_BAZ_OPTIONAL) === self::FOO_BAR_TO_BAZ_OPTIONAL) {
+            $rightRange .= '0..';
+        } else {
+            $rightRange .= '1..';
+        }
+        if (($this->relationType & self::FOO_BAR_TO_MANY_BAZ) === self::FOO_BAR_TO_MANY_BAZ) {
+            $rightRange .= 'n';
+        } else {
+            $rightRange .= '1';
+        }
+        $rightRange = str_replace('1..1', '1', $rightRange);
+
+        return $this->fromTable.' '
+            .'-'.$this->diagramDirection.str_repeat('-', $this->diagramArrowLength - 1)
+            .' '.$this->toTable
+            .':'.$leftRange.' : '.$rightRange;
     }
 }

@@ -25,6 +25,7 @@ return [
         ) : [],
     ],
     'target_database' => env('DB_DATABASE'),
+    'relation_type' => Relation::FORMAT_NUM,
     'relations' => [
 //        [
 //            'from' => 'hoge',

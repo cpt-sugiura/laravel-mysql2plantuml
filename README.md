@@ -40,6 +40,13 @@ ER図に表現する対象のデータベース名を指定します。
 ```
 'target_database' => env('DB_DATABASE'),
 ```
+### relation_type
+多重度の表現方法を指定します。
+```
+'target_database' => Relation::FORMAT_NUM,
+// or
+'target_database' => Relation::FORMAT_CROW,
+```
 ### relations
 テーブル間のリレーションとその図示を定義します。
 何もなくとも外部キー制約を元にリレーションを図示します。
