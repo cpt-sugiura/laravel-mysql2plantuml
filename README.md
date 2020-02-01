@@ -40,6 +40,15 @@ ER図に表現する対象のデータベース名を指定します。
 ```
 'target_database' => env('DB_DATABASE'),
 ```
+### without_tables
+```
+/*
+ * ER図上に描かないテーブルを指定します
+ */
+'without_tables'  => [
+    'migrations'
+],
+```
 ### relation_type
 多重度の表現方法を指定します。
 ```

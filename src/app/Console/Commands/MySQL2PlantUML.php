@@ -28,9 +28,9 @@ class MySQL2PlantUML extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         $packageDefines = config('mysql2plantuml.packages');
         $packages = $this->getPackagedSchema($packageDefines);
@@ -68,6 +68,10 @@ class MySQL2PlantUML extends Command
     {
         return InformationSchemaTable::where('TABLE_SCHEMA', config('mysql2plantuml.target_database'))
             ->get()
+            ->filter(static function(InformationSchemaTable $table){
+                $withoutTableNames = config('mysql2plantuml.without_tables') ?: [];
+                return ! in_array($table->TABLE_NAME, $withoutTableNames, true);
+            })
             ->mapToGroups(
                 static function (InformationSchemaTable $table) use ($packageDefines) {
                     if ($packageDefines === null || $packageDefines === []) {
