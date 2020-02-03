@@ -3,8 +3,8 @@
 namespace Mysql2PlantUml\App\Console\Commands;
 
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
+use Mysql2PlantUml\app\Exceptions\NotCreateDirException;
 use Mysql2PlantUml\App\Models\Eloquents\InformationSchemaTable;
 use Illuminate\Console\Command;
 use Mysql2PlantUml\app\Models\ValueObjects\Relation;
@@ -44,15 +44,15 @@ class MySQL2PlantUML extends Command
         $bladePath = __DIR__.'/../../../resources/views/base.blade.php';
         $view = View::file($bladePath, compact('packages', 'relationsByConfig'));
 
-        Storage::deleteDirectory('ER');
-        Storage::put('ER/'.config('mysql2plantuml.target_database').'_ER.puml', $view->render());
+        $baseDirPath = $this->PrepareDistDir();
+        file_put_contents($baseDirPath.config('mysql2plantuml.target_database').'_ER.puml', $view->render());
         $packages->each(
-            static function ($package, $index) use ($relationsByConfig, $bladePath) {
+            static function ($package, $index) use ($baseDirPath, $relationsByConfig, $bladePath) {
                 $view = View::file(
                     $bladePath,
                     ['packages' => [$index => $package], 'relationsByConfig' => $relationsByConfig]
                 );
-                Storage::put('ER/'.$index.'_ER.puml', $view->render());
+                file_put_contents($baseDirPath.$index.'_ER.puml', $view->render());
             }
         );
     }
@@ -86,5 +86,17 @@ class MySQL2PlantUML extends Command
                     return [$packageName ?? ($table->TABLE_COMMENT ?: $table->TABLE_NAME) => $table];
                 }
             );
+    }
+
+    /**
+     * @return string
+     */
+    protected function PrepareDistDir(): string
+    {
+        $baseDirPath = base_path().DIRECTORY_SEPARATOR.config('mysql2plantuml.dist_dir').DIRECTORY_SEPARATOR;
+        if (!file_exists($baseDirPath) && !mkdir($baseDirPath) && !is_dir($baseDirPath)) {
+            throw new NotCreateDirException(sprintf('Directory "%s" was not created', $baseDirPath));
+        }
+        return $baseDirPath;
     }
 }

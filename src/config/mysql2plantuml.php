@@ -3,6 +3,10 @@
 use Mysql2PlantUml\app\Models\ValueObjects\Relation;
 
 return [
+    /*
+     * 出力先のディレクトリを指定します
+     */
+    'dist_dir'        => 'storage/ER',
     'connection'      => [
         'driver'         => env('DB_CONNECTION'),
         'url'            => env('DATABASE_URL'),
