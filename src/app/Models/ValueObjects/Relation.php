@@ -54,6 +54,13 @@ class Relation
         self::MANY_OPTIONAL_TO_MANY_OPTIONAL,
     ];
 
+    public const ARROW_CHAR_LINE = '-';
+    public const ARROW_CHAR_DOT = '.';
+    public const ARROW_CHAR_SET = [
+        self::ARROW_CHAR_LINE,
+        self::ARROW_CHAR_DOT,
+    ];
+
     public const DIRECTION_AUTO = '';
     public const DIRECTION_UP = 'up';
     public const DIRECTION_DOWN = 'down';
@@ -68,6 +75,7 @@ class Relation
     ];
 
     public const DEFAULT_ARROW_LENGTH = 2;
+    public const DEFAULT_ARROW_CHAR = self::ARROW_CHAR_LINE;
     public const DEFAULT_DIRECTION = self::DIRECTION_AUTO;
     public const DEFAULT_RELATION_TYPE = self::MANY_OPTIONAL_TO_ONE_MANDATORY;
 
@@ -78,20 +86,16 @@ class Relation
     public $relationType;
     public $diagramDirection;
     public $diagramArrowLength;
-    /**      @var string $fromColumn */
-    private $fromColumn;
-    /** @var string $toColumn */
-    private $toColumn;
+    public $diagramArrowChar;
 
     /**
      * Relation constructor.
      * @param  string  $fromTable
      * @param  string  $toTable
-     * @param $relationType
-     * @param $diagramDirection
-     * @param $diagramArrowLength
-     * @param  string  $fromColumn
-     * @param  string  $toColumn
+     * @param          $relationType
+     * @param          $diagramDirection
+     * @param          $diagramArrowLength
+     * @param  string  $arrowChar
      * @throws InvalidArgsException
      */
     public function __construct(
@@ -100,16 +104,14 @@ class Relation
         $relationType = null,
         $diagramDirection = null,
         $diagramArrowLength = null,
-        string $fromColumn = '',
-        string $toColumn = ''
+        $arrowChar = null
     ) {
         $this->setFromTable($fromTable);
         $this->setToTable($toTable);
-        $this->fromColumn = ($fromColumn);
-        $this->toColumn = ($toColumn);
         $this->setRelationType($relationType ?? self::DEFAULT_RELATION_TYPE);
         $this->setDiagramDirection($diagramDirection ?? self::DEFAULT_DIRECTION);
         $this->setDiagramArrowLength($diagramArrowLength ?? self::DEFAULT_ARROW_LENGTH);
+        $this->setArrowChar($arrowChar ?? self::DEFAULT_ARROW_CHAR);
     }
 
     public function getRelationTableSetId(): string
@@ -135,7 +137,8 @@ class Relation
             $attributes['to'],
             $attributes['relation'] ?? null,
             $attributes['direction'] ?? null,
-            $attributes['arrowLength'] ?? null
+            $attributes['arrowLength'] ?? null,
+            $attributes['arrowChar'] ?? null
         );
     }
 
@@ -232,7 +235,10 @@ class Relation
         if (($this->relationType & self::FOO_OPTIONAL_TO_BAR_BAZ) === self::FOO_OPTIONAL_TO_BAR_BAZ) {
             $arrowStr .= 'o';
         }
-        $arrowStr .= '-'.$this->diagramDirection.str_repeat('-', $this->diagramArrowLength - 1);
+        $arrowStr .= $this->diagramArrowChar.$this->diagramDirection.str_repeat(
+                $this->diagramArrowChar,
+                $this->diagramArrowLength - 1
+            );
         if (($this->relationType & self::FOO_BAR_TO_BAZ_OPTIONAL) === self::FOO_BAR_TO_BAZ_OPTIONAL) {
             $arrowStr .= 'o';
         }
@@ -274,8 +280,25 @@ class Relation
         $rightRange = str_replace('1..1', '1', $rightRange);
 
         return $this->fromTable.' '
-            .'-'.$this->diagramDirection.str_repeat('-', $this->diagramArrowLength - 1)
+            .$this->diagramArrowChar.$this->diagramDirection.str_repeat(
+                $this->diagramArrowChar,
+                $this->diagramArrowLength - 1
+            )
             .' '.$this->toTable
-            .':'.$this->fromTable .' : '.$this->toTable.'\n = '.$leftRange.' : '.$rightRange;
+            .':'.$this->fromTable.' : '.$this->toTable.'\n = '.$leftRange.' : '.$rightRange;
+    }
+
+    /**
+     * @param  string  $diagramArrowChar
+     * @throws InvalidArgsException
+     */
+    private function setArrowChar(string $diagramArrowChar): void
+    {
+        if (!in_array($diagramArrowChar, self::ARROW_CHAR_SET, true)) {
+            throw new InvalidArgsException(
+                'Invalid ARROW_CHAR= "'.$diagramArrowChar.'".  Please, $diagramArrowChar in '.self::class.'::ARROW_CHAR_SET.'
+            );
+        }
+        $this->diagramArrowChar = $diagramArrowChar;
     }
 }

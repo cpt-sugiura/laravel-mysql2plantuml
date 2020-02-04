@@ -50,6 +50,7 @@ return [
 //            'relation' => Relation::ONE_MANDATORY_TO_ONE_MANDATORY,
 //            'direction' => Relation::DIRECTION_UP,
 //            'arrowLength' => 4,
+//            'arrowChar' => '.',
 //        ],
 //    ],
 //    'packages' => [
