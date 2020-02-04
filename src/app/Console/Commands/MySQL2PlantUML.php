@@ -45,7 +45,7 @@ class MySQL2PlantUML extends Command
         $view = View::file($bladePath, compact('packages', 'relationsByConfig'));
 
         $baseDirPath = $this->PrepareDistDir();
-        file_put_contents($baseDirPath.config('mysql2plantuml.target_database').'_ER.puml', $view->render());
+        file_put_contents($baseDirPath.config('mysql2plantuml.target_database').'.puml', $view->render());
         $packages->each(
             static function ($package, $index) use ($baseDirPath, $relationsByConfig, $bladePath) {
                 $view = View::file(
