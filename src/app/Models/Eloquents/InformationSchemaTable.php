@@ -54,6 +54,7 @@ class InformationSchemaTable extends Model
         $columns = Cache::get($this->TABLE_NAME.'-columns')
             ?? InformationSchemaColumn::where('TABLE_NAME', $this->TABLE_NAME)
                 ->where('TABLE_SCHEMA', $this->TABLE_SCHEMA)
+                ->orderBy('ORDINAL_POSITION')
                 ->get();
         Cache::driver('array')->put($this->TABLE_NAME.'-columns', $columns);
 
