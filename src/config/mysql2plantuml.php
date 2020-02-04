@@ -35,6 +35,9 @@ return [
     'without_tables'  => [
         'migrations'
     ],
+    // 自由なコメントを末尾に追加
+    'free_comment' => '',
+    // リレーションの表記形式指定
     'relation_type'   => Relation::FORMAT_NUM,
 //    'relations' => [
 //        [

@@ -50,7 +50,7 @@ class MySQL2PlantUML extends Command
             static function ($package, $index) use ($baseDirPath, $relationsByConfig, $bladePath) {
                 $view = View::file(
                     $bladePath,
-                    ['packages' => [$index => $package], 'relationsByConfig' => $relationsByConfig]
+                    ['packages' => [$index => $package], 'relationsByConfig' => $relationsByConfig, 'freeComment' => config('mysql2plantuml.free_comment')]
                 );
                 file_put_contents($baseDirPath.$index.'_ER.puml', $view->render());
             }
