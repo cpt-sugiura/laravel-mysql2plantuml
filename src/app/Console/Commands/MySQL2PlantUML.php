@@ -42,7 +42,8 @@ class MySQL2PlantUML extends Command
             ) ?: collect();
 
         $bladePath = __DIR__.'/../../../resources/views/base.blade.php';
-        $view = View::file($bladePath, compact('packages', 'relationsByConfig'));
+        $freeComment = config('mysql2plantuml.free_comment');
+        $view = View::file($bladePath, compact('packages', 'relationsByConfig', 'freeComment'));
 
         $baseDirPath = $this->PrepareDistDir();
         file_put_contents($baseDirPath.config('mysql2plantuml.target_database').'.puml', $view->render());
@@ -50,9 +51,9 @@ class MySQL2PlantUML extends Command
             static function ($package, $index) use ($baseDirPath, $relationsByConfig, $bladePath) {
                 $view = View::file(
                     $bladePath,
-                    ['packages' => [$index => $package], 'relationsByConfig' => $relationsByConfig, 'freeComment' => config('mysql2plantuml.free_comment')]
+                    ['packages' => [$index => $package], 'relationsByConfig' => $relationsByConfig]
                 );
-                file_put_contents($baseDirPath.$index.'_ER.puml', $view->render());
+                file_put_contents($baseDirPath.$index.'.puml', $view->render());
             }
         );
     }

@@ -24,5 +24,5 @@ package {{ $packageName }} {
 @endforeach
 @endforeach
 @endforeach
-{{ $freeComment }}
+{{ $freeComment ?? '' }}
 @enduml
