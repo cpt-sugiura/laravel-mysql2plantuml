@@ -53,6 +53,7 @@ return [
 //            'arrowChar' => '.',
 //        ],
 //    ],
+    'without_package_files' => true,
 //    'packages' => [
 //        'hogefuga' => [
 //            'foo',

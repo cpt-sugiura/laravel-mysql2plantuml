@@ -53,7 +53,7 @@ class MySQL2PlantUML extends Command
                     $bladePath,
                     ['packages' => [$index => $package], 'relationsByConfig' => $relationsByConfig]
                 );
-                file_put_contents($baseDirPath.$index.'.puml', $view->render());
+                config('mysql2plantuml.without_package_files') ?: file_put_contents($baseDirPath.$index.'.puml', $view->render());
             }
         );
     }
