@@ -1,8 +1,8 @@
 @section('entity')
 @php
-    /** @var \Mysql2PlantUml\App\Models\InformationSchemaTable $table  */
-    /** @var \Mysql2PlantUml\App\Models\InformationSchemaColumn $column  */
-    /** @var \Mysql2PlantUml\App\Models\InformationSchemaKeyColumnUsage $keyColumnUsage  */
+    /** @var \Mysql2PlantUml\App\Models\Eloquents\InformationSchemaTable $table  */
+    /** @var \Mysql2PlantUml\App\Models\Eloquents\InformationSchemaColumn $column  */
+    /** @var \Mysql2PlantUml\App\Models\Eloquents\InformationSchemaKeyColumnUsage $keyColumnUsage  */
 @endphp
 entity "{{ $table->TABLE_COMMENT ? $table->TABLE_COMMENT.'\n' : null }}{{ $table->TABLE_NAME }}" as {{ $table->TABLE_NAME }} {
 @php

@@ -8,6 +8,7 @@ use Mysql2PlantUml\app\Exceptions\NotCreateDirException;
 use Mysql2PlantUml\App\Models\Eloquents\InformationSchemaTable;
 use Illuminate\Console\Command;
 use Mysql2PlantUml\app\Models\ValueObjects\Relation;
+use Symfony\Component\Console\Input\InputOption;
 
 class MySQL2PlantUML extends Command
 {
@@ -16,7 +17,7 @@ class MySQL2PlantUML extends Command
      *
      * @var string
      */
-    protected $signature = 'dump:mysql2puml';
+    protected $name = 'dump:mysql2puml';
 
     /**
      * The console command description.
@@ -24,6 +25,16 @@ class MySQL2PlantUML extends Command
      * @var string
      */
     protected $description = 'MySQL中に既存のデータベースを元にER図を出力します。';
+
+    /**
+     * @return array
+     */
+    protected function getOptions()
+    {
+        return [
+            ['excel', 'e', InputOption::VALUE_NONE, 'Excelに使いやすいTSV形式で出力する'],
+        ];
+    }
 
     /**
      * Execute the console command.
@@ -41,11 +52,11 @@ class MySQL2PlantUML extends Command
                 }
             ) ?: collect();
 
-        $bladePath = __DIR__.'/../../../resources/views/base.blade.php';
+        $bladePath = $this->getBaseBladePath();
         $freeComment = config('mysql2plantuml.free_comment');
         $view = View::file($bladePath, compact('packages', 'relationsByConfig', 'freeComment'));
 
-        $baseDirPath = $this->PrepareDistDir();
+        $baseDirPath = $this->prepareDistDir();
         file_put_contents($baseDirPath.config('mysql2plantuml.target_database').'.puml', $view->render());
         $packages->each(
             static function ($package, $index) use ($baseDirPath, $relationsByConfig, $bladePath) {
@@ -92,12 +103,22 @@ class MySQL2PlantUML extends Command
     /**
      * @return string
      */
-    protected function PrepareDistDir(): string
+    protected function prepareDistDir(): string
     {
         $baseDirPath = base_path().DIRECTORY_SEPARATOR.config('mysql2plantuml.dist_dir').DIRECTORY_SEPARATOR;
         if (!file_exists($baseDirPath) && !mkdir($baseDirPath) && !is_dir($baseDirPath)) {
             throw new NotCreateDirException(sprintf('Directory "%s" was not created', $baseDirPath));
         }
         return $baseDirPath;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getBaseBladePath(): string
+    {
+        return $this->option('excel')
+            ? __DIR__.'/../../../resources/views/excel/base.blade.php'
+            : __DIR__.'/../../../resources/views/base.blade.php';
     }
 }

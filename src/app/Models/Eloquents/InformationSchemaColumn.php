@@ -67,6 +67,10 @@ class InformationSchemaColumn extends Model
             )->isNotEmpty();
     }
 
+    public function isNullable():bool
+    {
+        return $this->IS_NULLABLE === 'YES';
+    }
 
     public function isNullableToString(): string
     {
@@ -83,6 +87,38 @@ class InformationSchemaColumn extends Model
             return "comment '".$this->COLUMN_COMMENT."'";
         }
         return '';
+    }
+
+    public function columnCommentWithLaravelDefault(): string
+    {
+        if($this->COLUMN_COMMENT){
+            return $this->COLUMN_COMMENT;
+        }
+        switch ($this->COLUMN_NAME){
+            case 'id':
+                $name = 'ID';
+                break;
+            case 'remember_token':
+                $name = 'ログイン記憶用トークン';
+                break;
+            case 'created_at':
+                $name = '作成日時';
+                break;
+            case 'updated_at':
+                $name = '最終更新日時';
+                break;
+            case 'deleted_at':
+                $name = '削除日時';
+                break;
+            default:
+                $name = '';
+        }
+        return  $name;
+    }
+
+    public function isPrimaryKey():bool
+    {
+        return $this->COLUMN_KEY === 'PRI';
     }
 
     public function columnKeyToPrefixString(): string
