@@ -7,7 +7,7 @@
 @php
     $columns = $table->columns();
 @endphp
-	項目名	DBカラム	属性	必須	PK	備考
+項目名								DBカラム										属性						必須			PK			備考
 @foreach( $columns as $index => $column )
 @php
     $commentOnDb = $column->columnCommentWithLaravelDefault();
