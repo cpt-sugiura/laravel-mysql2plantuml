@@ -16,7 +16,7 @@
     unset($parts[0]);
     $comment = count($parts) > 0 ? trim(implode('.', $parts)) : '';
 @endphp
-{{ $index + 1 }}	{{ $name }}	{{ $column->COLUMN_NAME }}	{{ $column->COLUMN_TYPE }}	{{ $column->isPrimaryKey() ? '○' : null }}	{{ !$column->isNullable() ? '○'  : null }}	{{ $comment }}
+{{ $index + 1 }}	{{ $name }}								{{ $column->COLUMN_NAME }}										{{ $column->COLUMN_TYPE }}						{{ $column->isNullable() ? '○' : null }}			{{ !$column->isPrimaryKey() ? '○'  : null }}			{{ $comment }}
 @endforeach
 @overwrite
 @yield('entity')
