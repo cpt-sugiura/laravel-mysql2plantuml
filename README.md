@@ -203,3 +203,5 @@ tasks }o-- users
 @enduml
 ```dacapo_sample_ER.svg
 ```
+## ER図（SVG）
+<img src="https://raw.githubusercontent.com/cpt-sugiura/laravel-mysql2plantuml/master/dacapo_sample_ER.svg" alt="ER図">
