@@ -10,6 +10,11 @@ php artisan dump:mysql2puml
 php artisan vendor:publish --provider=Mysql2PlantUml\Mysql2PlantUmlServiceProvider
 ```
 設定ファイルが/config/以下にダンプされます。
+### dist_dir
+出力先のディレクトリを指定します。
+```
+'dist_dir' => 'storage/ER',
+```
 ### connection
 information_schemaを指すようにデータベース接続先を指定します。
 ```
@@ -203,5 +208,5 @@ tasks }o-- users
 @enduml
 ```dacapo_sample_ER.svg
 ```
-## ER図（SVG）
+## ER図（puml to svg）
 <img src="https://raw.githubusercontent.com/cpt-sugiura/laravel-mysql2plantuml/master/dacapo_sample_ER.svg" alt="ER図">
