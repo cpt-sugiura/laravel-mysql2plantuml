@@ -69,25 +69,7 @@ class MySQL2PlantUML extends Command
             }
         );
 
-        $subFilesDefines = config('mysql2plantuml.sub_files');
-        foreach ($subFilesDefines as $filename => $tableNames){
-            $subTables = $packages->map(static function($package) use ($tableNames) {
-                /** @var Collection<InformationSchemaTable> $package */
-                return $package->filter(static function ($table) use ($tableNames) {
-                    /** @var InformationSchemaTable $table */
-                    return isset($table->TABLE_NAME) && in_array($table->TABLE_NAME, $tableNames, true);
-                });
-            })->filter(static function($package){
-                /** @var Collection $package */
-                return $package->isNotEmpty();
-            });
-            $view = View::file($bladePath, [
-                'packages' => $subTables, 'relationsByConfig' => $relationsByConfig, 'freeComment' => $freeComment
-            ]);
-
-            $baseDirPath = $this->prepareDistDir();
-            file_put_contents($baseDirPath.$filename, $view->render());
-        }
+        $this->dumpSubFiles($packages, $bladePath, $relationsByConfig, $freeComment);
     }
 
     /**
@@ -110,5 +92,48 @@ class MySQL2PlantUML extends Command
         return $this->option('excel')
             ? __DIR__.'/../../../resources/views/excel/base.blade.php'
             : __DIR__.'/../../../resources/views/base.blade.php';
+    }
+
+    /**
+     * @param  Collection<Collection<InformationSchemaTable>>  $packages
+     * @param  string                                          $bladePath
+     * @param  Collection                                      $relationsByConfig
+     * @param  string|null                                     $freeComment
+     */
+    protected function dumpSubFiles($packages, string $bladePath, Collection $relationsByConfig, $freeComment): void
+    {
+        $subFilesDefines = config('mysql2plantuml.sub_files');
+        if (!is_array($subFilesDefines)) {
+            return;
+        }
+        foreach ($subFilesDefines as $filename => $tableNames) {
+            $subTables = $packages->map(
+                static function ($package) use ($tableNames) {
+                    /** @var Collection<InformationSchemaTable> $package */
+                    return $package->filter(
+                        static function ($table) use ($tableNames) {
+                            /** @var InformationSchemaTable $table */
+                            return isset($table->TABLE_NAME) && in_array($table->TABLE_NAME, $tableNames, true);
+                        }
+                    );
+                }
+            )->filter(
+                static function ($package) {
+                    /** @var Collection $package */
+                    return $package->isNotEmpty();
+                }
+            );
+            $view = View::file(
+                $bladePath,
+                [
+                    'packages'          => $subTables,
+                    'relationsByConfig' => $relationsByConfig,
+                    'freeComment'       => $freeComment
+                ]
+            );
+
+            $baseDirPath = $this->prepareDistDir();
+            file_put_contents($baseDirPath.$filename, $view->render());
+        }
     }
 }
