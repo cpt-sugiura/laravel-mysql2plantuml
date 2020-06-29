@@ -64,4 +64,15 @@ return [
 //            'fuga'
 //        ]
 //    ]
+//    'sub_files' => [
+//        'hoge.puml' => [
+//            'foo',
+//            'hoge',
+//        ],
+//        'fuga.puml' => [
+//            'foo',
+//            'bar',
+//            'fuga',
+//        ],
+//    ],
 ];

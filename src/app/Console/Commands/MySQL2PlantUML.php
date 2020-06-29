@@ -3,8 +3,10 @@
 namespace Mysql2PlantUml\App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\View;
 use Mysql2PlantUml\app\Exceptions\NotCreateDirException;
+use Mysql2PlantUml\App\Models\Eloquents\InformationSchemaTable;
 use Mysql2PlantUml\app\Models\ValueObjects\Relation;
 use Mysql2PlantUml\app\Services\InformationSchemaService;
 use Symfony\Component\Console\Input\InputOption;
@@ -66,6 +68,26 @@ class MySQL2PlantUML extends Command
                 config('mysql2plantuml.without_package_files') ?: file_put_contents($baseDirPath.$index.'.puml', $view->render());
             }
         );
+
+        $subFilesDefines = config('mysql2plantuml.sub_files');
+        foreach ($subFilesDefines as $filename => $tableNames){
+            $subTables = $packages->map(static function($package) use ($tableNames) {
+                /** @var Collection<InformationSchemaTable> $package */
+                return $package->filter(static function ($table) use ($tableNames) {
+                    /** @var InformationSchemaTable $table */
+                    return isset($table->TABLE_NAME) && in_array($table->TABLE_NAME, $tableNames, true);
+                });
+            })->filter(static function($package){
+                /** @var Collection $package */
+                return $package->isNotEmpty();
+            });
+            $view = View::file($bladePath, [
+                'packages' => $subTables, 'relationsByConfig' => $relationsByConfig, 'freeComment' => $freeComment
+            ]);
+
+            $baseDirPath = $this->prepareDistDir();
+            file_put_contents($baseDirPath.$filename, $view->render());
+        }
     }
 
     /**

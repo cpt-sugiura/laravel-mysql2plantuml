@@ -96,6 +96,21 @@ PlantUML上で複数テーブルをパッケージとしてまとめます。
         ]
     ]
 ```
+### sub_files
+特定のテーブルのみのPlantUMLファイルを作ります。
+```
+    'sub_files' => [
+        'hoge.puml' => [
+            'foo',
+            'hoge',
+        ],
+        'fuga.puml' => [
+            'foo',
+            'bar',
+            'fuga',
+        ],
+    ],
+```
 # example
 ## sql
 ```
