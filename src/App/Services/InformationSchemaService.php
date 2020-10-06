@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Mysql2PlantUml\app\Services;
+namespace Mysql2PlantUml\App\Services;
 
 
 use Illuminate\Database\Eloquent\Collection;

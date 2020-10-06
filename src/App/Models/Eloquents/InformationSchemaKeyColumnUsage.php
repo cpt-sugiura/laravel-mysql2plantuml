@@ -6,7 +6,7 @@ namespace Mysql2PlantUml\App\Models\Eloquents;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Mysql2PlantUml\app\Models\ValueObjects\Relation;
+use Mysql2PlantUml\App\Models\ValueObjects\Relation;
 
 /**
  * App\Models\InformationSchemaKeyColumnUsage
@@ -35,7 +35,7 @@ class InformationSchemaKeyColumnUsage extends Model
 
     /**
      * @return Relation
-     * @throws \Mysql2PlantUml\app\Exceptions\InvalidArgsException
+     * @throws \Mysql2PlantUml\App\Exceptions\InvalidArgsException
      */
     public function getRelationValueObject(): ?Relation
     {

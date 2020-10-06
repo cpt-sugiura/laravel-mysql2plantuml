@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
-use Mysql2PlantUml\app\Models\ValueObjects\Relation;
+use Mysql2PlantUml\App\Models\ValueObjects\Relation;
 
 /**
  * Class InformationSchemaTable

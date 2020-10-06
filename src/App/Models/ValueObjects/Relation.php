@@ -1,9 +1,9 @@
 <?php
 
 
-namespace Mysql2PlantUml\app\Models\ValueObjects;
+namespace Mysql2PlantUml\App\Models\ValueObjects;
 
-use Mysql2PlantUml\app\Exceptions\InvalidArgsException;
+use Mysql2PlantUml\App\Exceptions\InvalidArgsException;
 
 class Relation
 {
@@ -211,7 +211,7 @@ class Relation
 
     /**
      * @param $diagramArrowLength
-     * @throws \Mysql2PlantUml\app\Exceptions\InvalidArgsException
+     * @throws \Mysql2PlantUml\App\Exceptions\InvalidArgsException
      */
     private function setDiagramArrowLength($diagramArrowLength): void
     {

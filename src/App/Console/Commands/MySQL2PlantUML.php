@@ -5,10 +5,10 @@ namespace Mysql2PlantUml\App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\View;
-use Mysql2PlantUml\app\Exceptions\NotCreateDirException;
+use Mysql2PlantUml\App\Exceptions\NotCreateDirException;
 use Mysql2PlantUml\App\Models\Eloquents\InformationSchemaTable;
-use Mysql2PlantUml\app\Models\ValueObjects\Relation;
-use Mysql2PlantUml\app\Services\InformationSchemaService;
+use Mysql2PlantUml\App\Models\ValueObjects\Relation;
+use Mysql2PlantUml\App\Services\InformationSchemaService;
 use Symfony\Component\Console\Input\InputOption;
 
 class MySQL2PlantUML extends Command
