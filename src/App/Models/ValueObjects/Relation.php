@@ -7,8 +7,8 @@ use Mysql2PlantUml\App\Exceptions\InvalidArgsException;
 
 class Relation
 {
-    public const FORMAT_CROW = 0x0;
-    public const FORMAT_NUM = 0x1;
+    public const FORMAT_CROW = 'crow';
+    public const FORMAT_NUM = 'num';
     public const FORMAT_TYPES = [
         self::FORMAT_CROW,
         self::FORMAT_NUM,
@@ -35,23 +35,23 @@ class Relation
     public const MANY_OPTIONAL_TO_ONE_OPTIONAL = 0x1101;
     public const MANY_OPTIONAL_TO_MANY_MANDATORY = 0x1110;
     public const MANY_OPTIONAL_TO_MANY_OPTIONAL = 0x1111;
-    public const RELATION_TYPES = [
-        self::ONE_MANDATORY_TO_ONE_MANDATORY,
-        self::ONE_MANDATORY_TO_ONE_OPTIONAL,
-        self::ONE_MANDATORY_TO_MANY_MANDATORY,
-        self::ONE_MANDATORY_TO_MANY_OPTIONAL,
-        self::ONE_OPTIONAL_TO_ONE_MANDATORY,
-        self::ONE_OPTIONAL_TO_ONE_OPTIONAL,
-        self::ONE_OPTIONAL_TO_MANY_MANDATORY,
-        self::ONE_OPTIONAL_TO_MANY_OPTIONAL,
-        self::MANY_MANDATORY_TO_ONE_MANDATORY,
-        self::MANY_MANDATORY_TO_ONE_OPTIONAL,
-        self::MANY_MANDATORY_TO_MANY_MANDATORY,
-        self::MANY_MANDATORY_TO_MANY_OPTIONAL,
-        self::MANY_OPTIONAL_TO_ONE_MANDATORY,
-        self::MANY_OPTIONAL_TO_ONE_OPTIONAL,
-        self::MANY_OPTIONAL_TO_MANY_MANDATORY,
-        self::MANY_OPTIONAL_TO_MANY_OPTIONAL,
+    public const RELATION_TYPE_STR_MAP = [
+        self::ONE_MANDATORY_TO_ONE_MANDATORY   => '1:1',
+        self::ONE_MANDATORY_TO_ONE_OPTIONAL    => '1:0..1',
+        self::ONE_MANDATORY_TO_MANY_MANDATORY  => '1:1..n',
+        self::ONE_MANDATORY_TO_MANY_OPTIONAL   => '1:0..n',
+        self::ONE_OPTIONAL_TO_ONE_MANDATORY    => '0..1:1',
+        self::ONE_OPTIONAL_TO_ONE_OPTIONAL     => '0..1:0..1',
+        self::ONE_OPTIONAL_TO_MANY_MANDATORY   => '0..1:1..n',
+        self::ONE_OPTIONAL_TO_MANY_OPTIONAL    => '0..1:0..n',
+        self::MANY_MANDATORY_TO_ONE_MANDATORY  => '1..n:1',
+        self::MANY_MANDATORY_TO_ONE_OPTIONAL   => '1..n:0..1',
+        self::MANY_MANDATORY_TO_MANY_MANDATORY => '1..n:1..n',
+        self::MANY_MANDATORY_TO_MANY_OPTIONAL  => '1..n:0..n',
+        self::MANY_OPTIONAL_TO_ONE_MANDATORY   => '0..n:1',
+        self::MANY_OPTIONAL_TO_ONE_OPTIONAL    => '0..n:0..1',
+        self::MANY_OPTIONAL_TO_MANY_MANDATORY  => '0..n:1..n',
+        self::MANY_OPTIONAL_TO_MANY_OPTIONAL   => '0..n:0..n',
     ];
 
     public const ARROW_CHAR_LINE = '-';
@@ -159,12 +159,14 @@ class Relation
      */
     private function setRelationType($relationType): void
     {
-        if (!in_array($relationType, self::RELATION_TYPES, true)) {
+        if (!array_key_exists($relationType, self::RELATION_TYPE_STR_MAP) && !in_array($relationType, self::RELATION_TYPE_STR_MAP, true)) {
             throw new InvalidArgsException(
-                'Invalid RELATION_TYPE = '.$relationType.'. Please, $relationType in '.self::class.'::RELATION_TYPES.'
+                'Invalid RELATION_TYPE = '.$relationType.'. Please, $relationType in '.self::class.'::RELATION_TYPES\'s key or value.'
             );
         }
-        $this->relationType = $relationType;
+        $this->relationType = in_array($relationType, self::RELATION_TYPE_STR_MAP, true)
+            ? array_flip(self::RELATION_TYPE_STR_MAP)[$relationType]
+            : $relationType;
     }
 
     /**
@@ -236,9 +238,9 @@ class Relation
             $arrowStr .= 'o';
         }
         $arrowStr .= $this->diagramArrowChar.$this->diagramDirection.str_repeat(
-                $this->diagramArrowChar,
-                $this->diagramArrowLength - 1
-            );
+            $this->diagramArrowChar,
+            $this->diagramArrowLength - 1
+        );
         if (($this->relationType & self::FOO_BAR_TO_BAZ_OPTIONAL) === self::FOO_BAR_TO_BAZ_OPTIONAL) {
             $arrowStr .= 'o';
         }

@@ -38,8 +38,8 @@ return [
     // 自由なコメントを末尾に追加
     'free_comment' => '',
     // リレーションの表記形式指定
-    'relation_type'   => Relation::FORMAT_NUM,
-//    'relations' => [
+    'relation_type'   => 'crow', // 'num' or 'crow'
+    'relations' => [
 //        [
 //            'from' => 'hoge',
 //            'to' => 'fuga',
@@ -47,12 +47,20 @@ return [
 //        [
 //            'from' => 'foo',
 //            'to' => 'bar',
-//            'relation' => Relation::ONE_MANDATORY_TO_ONE_MANDATORY,
+//            'relation' => Relation::ONE_MANDATORY_TO_ONE_OPTIONAL,
 //            'direction' => Relation::DIRECTION_UP,
 //            'arrowLength' => 4,
 //            'arrowChar' => '.',
 //        ],
-//    ],
+//        [// without const. useful when cannot use Mysql2PlantUml\app\Models\ValueObjects\Relation
+//            'from' => 'users',
+//            'to' => 'password_resets',
+//            'relation' => '1:0..1',
+//            'direction' => 'up',
+//            'arrowLength' => 4,
+//            'arrowChar' => '.',
+//        ],
+    ],
     'without_package_files' => true,
 //    'packages' => [
 //        'hogefuga' => [

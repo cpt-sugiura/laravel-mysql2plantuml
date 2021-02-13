@@ -10,6 +10,9 @@ php artisan dump:mysql2puml
 php artisan vendor:publish --provider=Mysql2PlantUml\Mysql2PlantUmlServiceProvider
 ```
 設定ファイルが/config/以下にダンプされます。
+
+以下の例では `Mysql2PlantUml\app\Models\ValueObjects\Relation` クラスのクラス定数を使っています。
+`composer require --dev` でこのライブラリをインストールした場合、本番環境では存在しないクラスの参照でエラーが起きます。`require --dev`する場合、クラス定数内で定義されてある文字列を直に設定ファイルに書き込んでください。
 ### dist_dir
 出力先のディレクトリを指定します。
 ```
